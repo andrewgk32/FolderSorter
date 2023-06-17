@@ -1,11 +1,12 @@
 import os 
 import shutil
+import time
 
 def get_files_in_folder(folder_path):
     files = []
     for entry in os.scandir(folder_path):
         if entry.is_file():
-            files.append(entry.path)
+            files.append(entry.path)        
         if entry.is_dir():
             files.append(entry.path)
     return files
@@ -15,31 +16,48 @@ def create_folder_if_not_exists(folder_path):
         os.makedirs(folder_path)
 
 def move_file_to_folder(file_path, folder_path):
-    shutil.move(file_path, folder_path)
+    try:
+        file_name = os.path.basename(file_path)
+        destination_path = os.path.join(folder_path, file_name)
 
+        # Check if the file already exists in the destination folder
+        if os.path.exists(destination_path):
+            base_name, extension = os.path.splitext(file_name)
+            new_name = base_name + "(1)" + extension
 
-#try:
-#   downloads_path = input("Enter the path to the downloads folder: ")
-#    downloaded_files = get_files_in_folder(downloads_path)
-#    final_dir = input("Enter the Path of the final Directory (Note, Your local documents folder is highly recommend, e.g. for linux users /home/username/Documents)")
-#    print(downloaded_files)
-#except Exception as e:
-#    print(f"Error: {e}")
+            counter = 2
+            while os.path.exists(os.path.join(folder_path, new_name)):
+                new_name = base_name + f"({counter})" + extension
+                counter += 1
 
-
-downloads_path = '/home/andrew/Downloads'
-final_dir = '/home/andrew/Documents'
+            destination_path = os.path.join(folder_path, new_name)
+        sleep_value = 0.1
+        time.sleep(sleep_value)
+        shutil.move(file_path, destination_path)
+        print("Successfully moved" + file_path + "to " + folder_path)
+    except Exception as e:
+        error_message = str(e)
+        excluded_errors = ["No such file or directory"]
+        if not any (error in error_message for error in excluded_errors):
+            print(f"Error: {e}")
+try:
+    downloads_path = input("Enter the path to the folder to be sorted: ")
+    downloaded_files = get_files_in_folder(downloads_path)
+    final_dir = input("Enter the Path of the final Directory: ")
+    print(downloaded_files)
+except Exception as e:
+    print(f"Error: {e}")
 
 user_folder_name = os.path.basename(os.path.normpath(downloads_path))
 
-doc_folder = os.path.join(final_dir, user_folder_name + "Assorted Documents")
-code_folder = os.path.join(final_dir, user_folder_name + "Code")
-folders_folder = os.path.join(final_dir, user_folder_name + "Folders & Zips")
-data_folder = os.path.join(final_dir, user_folder_name + "Data")
-images_folder = os.path.join(final_dir, user_folder_name + "Images")
-videos_folder = os.path.join(final_dir, user_folder_name + "Videos + Audio") 
-executables_folder = os.path.join(final_dir, user_folder_name + "Executables")
-random_folder = os.path.join(final_dir, user_folder_name + "Random Files")
+doc_folder = os.path.join(final_dir, user_folder_name + " Assorted Documents")
+code_folder = os.path.join(final_dir, user_folder_name + " Code")
+folders_folder = os.path.join(final_dir, user_folder_name + " Folders & Zips")
+data_folder = os.path.join(final_dir, user_folder_name + " Data")
+images_folder = os.path.join(final_dir, user_folder_name + " Images")
+videos_folder = os.path.join(final_dir, user_folder_name + " Videos + Audio") 
+executables_folder = os.path.join(final_dir, user_folder_name + " Executables")
+random_folder = os.path.join(final_dir, user_folder_name + " Random Files")
 
 create_folder_if_not_exists(doc_folder)
 create_folder_if_not_exists(code_folder)
@@ -122,5 +140,8 @@ for file_path in downloaded_files:
     if file_extension in extensions_to_folders:
         folder_path = extensions_to_folders[file_extension]
         move_file_to_folder(file_path, folder_path)
-
-print(downloaded_files)
+    else:
+        move_file_to_folder(file_path, random_folder)
+for folder_path in downloaded_files:
+    move_file_to_folder(folder_path, folders_folder)
+print("Files and folders sorted successfully")
