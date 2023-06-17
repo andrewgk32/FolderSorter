@@ -1,11 +1,9 @@
 #Written by Andrewgk32 on June 17 2023
-
 import os
 import shutil
 import tkinter as tk
 import platform
 from tkinter import filedialog, messagebox
-from file_extensions import extensions_to_folders
 
 def get_user_documents_folder():
     system = platform.system()
@@ -95,12 +93,74 @@ def sort_files():
             create_folder_if_not_exists(data_folder)
             create_folder_if_not_exists(images_folder)
             create_folder_if_not_exists(videos_folder)
-            create_folder_if_not_exists(executables_folder)
             create_folder_if_not_exists(random_folder)
 
             downloaded_files = get_files_in_folder(downloads_path)
 
-            
+            extensions_to_folders = {
+                ".cpp" : code_folder,
+                ".java": code_folder,
+                ".js": code_folder,
+                ".css": code_folder,
+                ".h": code_folder,
+                ".php": code_folder,
+                ".sql": code_folder,
+                ".r": code_folder,
+                ".mat": code_folder,
+                ".py": code_folder,
+                ".ipynb": code_folder,
+                ".c": code_folder,
+                ".hmtl": code_folder,
+                ".pdf": doc_folder,
+                ".doc": doc_folder,
+                ".docx": doc_folder,
+                ".ppt": doc_folder,
+                ".xls": doc_folder,
+                ".pptx": doc_folder,
+                ".txt": doc_folder,
+                ".md": doc_folder,
+                ".json": data_folder,
+                ".csv": data_folder,
+                ".xml": data_folder,
+                ".xlsx": data_folder,
+                ".jpg": images_folder,
+                ".png": images_folder,
+                ".jpeg": images_folder,
+                ".gif": images_folder,
+                ".bmp": images_folder,
+                ".raw": images_folder,
+                ".svg": images_folder,
+                ".ico": images_folder,
+                ".webp": images_folder,
+                ".tiff": images_folder,
+                ".tif": images_folder,
+                ".mp4": videos_folder,
+                ".mov": videos_folder,
+                ".avi": videos_folder,
+                ".mkv": videos_folder,
+                ".wmv": videos_folder,
+                ".flv": videos_folder,
+                ".m4v": videos_folder,
+                ".mpg": videos_folder,
+                ".webm": videos_folder,
+                ".mp3": videos_folder,
+                ".wav": videos_folder,
+                "m4a": videos_folder,
+                ".aiff": videos_folder,
+                ".mid": videos_folder,
+                ".midi": videos_folder,
+                ".flac": videos_folder,
+                ".wma": videos_folder,
+                ".zip": folders_folder,
+                ".app": executables_folder,
+                ".sh": executables_folder,
+                ".exe": executables_folder,
+                ".deb": executables_folder,
+                ".jar": executables_folder,
+                ".out": executables_folder,
+                ".run": executables_folder,
+                ".msi": executables_folder
+                }
 
             for file_path in downloaded_files:
                 file_extension = os.path.splitext(file_path)[1]
